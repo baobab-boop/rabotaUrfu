@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block title %}Главная страница{% endblock %}
+
+{% block content %}
+<div class="jumbotron bg-light p-5 rounded text-center">
+    <h1 class="display-4">Добро пожаловать в Job Portal!</h1>
+    <p class="lead">Найдите работу своей мечты или подберите идеального кандидата</p>
+    <hr class="my-4">
+    <p>Платформа для поиска работы и подбора персонала</p>
+
+    <div class="row mt-5">
+        <div class="col-md-4 mb-3">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">👤 Для соискателей</h5>
+                    <p class="card-text">Найдите подходящую вакансию, отправьте заявку и следите за статусом</p>
+                    {% if not user.is_authenticated %}
+                    <a href="{% url 'register' %}" class="btn btn-outline-primary">Начать поиск</a>
+                    {% else %}
+                    <a href="{% url 'vacancy_list' %}" class="btn btn-primary">Смотреть вакансии</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">🏢 Для работодателей</h5>
+                    <p class="card-text">Размещайте вакансии, просматривайте заявки и управляйте процессом найма</p>
+                    {% if user.is_staff %}
+                    <a href="/admin/" class="btn btn-success">Управление вакансиями</a>
+                    {% elif user.is_authenticated %}
+                    <p class="text-muted">Требуются права администратора</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">📊 Удобный интерфейс</h5>
+                    <p class="card-text">Простая навигация, система уведомлений и отслеживание статусов заявок</p>
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'my_applications' %}" class="btn btn-info">Мои заявки</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
