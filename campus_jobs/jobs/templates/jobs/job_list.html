@@ -1,0 +1,55 @@
+{% extends "jobs/base.html" %}
+{% block title %}Вакансии{% endblock %}
+{% block hero_title %}Вакансии и стажировки{% endblock %}
+{% block hero_text %}Смотрите актуальные предложения, фильтруйте по типу и ищите подходящую роль за пару секунд.{% endblock %}
+
+{% block content %}
+<h2 class="section-title">Актуальные предложения</h2>
+<p class="section-subtitle">Поиск по названию, описанию и локации.</p>
+
+<form method="get" class="filters">
+  <input type="text" name="q" placeholder="Поиск по вакансии..." value="{{ q }}">
+  <select name="type">
+    <option value="">Все типы</option>
+    <option value="assistant" {% if job_type == "assistant" %}selected{% endif %}>Ассистент преподавателя</option>
+    <option value="administrative" {% if job_type == "administrative" %}selected{% endif %}>Административная работа</option>
+    <option value="research" {% if job_type == "research" %}selected{% endif %}>Исследовательский проект</option>
+    <option value="internship" {% if job_type == "internship" %}selected{% endif %}>Стажировка</option>
+  </select>
+  <button type="submit">Искать</button>
+</form>
+
+<div class="cards">
+  {% for job in jobs %}
+    <article class="card">
+      <div class="card__header">
+        <div>
+          <h3 class="card__title">
+            <a class="link" href="{% url 'job_detail' job.pk %}">{{ job.title }}</a>
+          </h3>
+          <p class="muted">{{ job.employer.name }}</p>
+        </div>
+        <span class="badge badge--primary">{{ job.get_job_type_display }}</span>
+      </div>
+
+      <p class="muted">{{ job.description|truncatechars:165 }}</p>
+
+      <div class="card__meta">
+        <span class="badge">{{ job.location }}</span>
+        <span class="badge">Дедлайн: {{ job.deadline }}</span>
+        {% if job.salary_min or job.salary_max %}
+          <span class="badge badge--success">
+            {% if job.salary_min %}{{ job.salary_min }}{% else %}0{% endif %}
+            {% if job.salary_max %}– {{ job.salary_max }}{% endif %}
+          </span>
+        {% endif %}
+      </div>
+    </article>
+  {% empty %}
+    <div class="empty-state">
+      <h3>Ничего не найдено</h3>
+      <p>Попробуй изменить запрос или сбросить фильтр.</p>
+    </div>
+  {% endfor %}
+</div>
+{% endblock %}

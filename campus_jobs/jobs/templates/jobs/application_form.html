@@ -1,0 +1,57 @@
+{% extends "jobs/base.html" %}
+{% block title %}Подать заявку{% endblock %}
+{% block hero_title %}Подать заявку{% endblock %}
+{% block hero_text %}Заполни форму аккуратно — после отправки заявка появится в разделе «Мои заявки».{% endblock %}
+
+{% block content %}
+<div class="form-card">
+  <div class="card">
+    <div class="card__header">
+      <div>
+        <h2 class="card__title">{{ job.title }}</h2>
+        <p class="muted">{{ job.employer.name }} · {{ job.get_job_type_display }}</p>
+      </div>
+      <span class="badge badge--primary">Заявка</span>
+    </div>
+
+    <form method="post" class="form">
+      {% csrf_token %}
+
+      {% if form.non_field_errors %}
+        <div class="notice">
+          {{ form.non_field_errors }}
+        </div>
+      {% endif %}
+
+      <p>
+        <label for="{{ form.full_name.id_for_label }}">Имя и фамилия</label>
+        {{ form.full_name }}
+        {{ form.full_name.errors }}
+      </p>
+
+      <p>
+        <label for="{{ form.email.id_for_label }}">Email</label>
+        {{ form.email }}
+        {{ form.email.errors }}
+      </p>
+
+      <p>
+        <label for="{{ form.phone.id_for_label }}">Телефон</label>
+        {{ form.phone }}
+        {{ form.phone.errors }}
+      </p>
+
+      <p>
+        <label for="{{ form.cover_letter.id_for_label }}">Сопроводительное письмо</label>
+        {{ form.cover_letter }}
+        {{ form.cover_letter.errors }}
+      </p>
+
+      <div class="actions">
+        <button type="submit">Отправить заявку</button>
+        <a class="btn" style="background:#64748b; box-shadow:none;" href="{% url 'job_detail' job.pk %}">Отмена</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

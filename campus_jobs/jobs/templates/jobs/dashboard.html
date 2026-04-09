@@ -1,0 +1,40 @@
+{% extends "jobs/base.html" %}
+{% block title %}Панель работодателя{% endblock %}
+{% block hero_title %}Панель работодателя{% endblock %}
+{% block hero_text %}Управляйте вакансиями и смотрите количество откликов по каждой позиции.{% endblock %}
+
+{% block content %}
+<h2 class="section-title">Обзор вакансий</h2>
+<p class="section-subtitle">Список всех позиций и количество заявок по каждой из них.</p>
+
+<div class="cards">
+  {% for job in jobs %}
+    <article class="card">
+      <div class="card__header">
+        <div>
+          <h3 class="card__title">{{ job.title }}</h3>
+          <p class="muted">{{ job.employer.name }}</p>
+        </div>
+
+        {% if job.is_active %}
+          <span class="badge badge--success">Активна</span>
+        {% else %}
+          <span class="badge badge--danger">Неактивна</span>
+        {% endif %}
+      </div>
+
+      <p class="muted">{{ job.location }} · {{ job.get_job_type_display }}</p>
+
+      <div class="card__meta">
+        <span class="badge">Заявок: {{ job.app_count }}</span>
+        <span class="badge">Дедлайн: {{ job.deadline }}</span>
+      </div>
+    </article>
+  {% empty %}
+    <div class="empty-state">
+      <h3>Пока нет вакансий</h3>
+      <p>Добавьте первую вакансию через админку.</p>
+    </div>
+  {% endfor %}
+</div>
+{% endblock %}

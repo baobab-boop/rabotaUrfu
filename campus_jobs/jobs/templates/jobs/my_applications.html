@@ -1,0 +1,56 @@
+{% extends "jobs/base.html" %}
+{% block title %}Мои заявки{% endblock %}
+{% block hero_title %}Мои заявки{% endblock %}
+{% block hero_text %}Проверь статус откликов по email и следи за всеми отправленными заявками в одном месте.{% endblock %}
+
+{% block content %}
+<h2 class="section-title">Поиск заявок</h2>
+<p class="section-subtitle">Введите email, на который была отправлена заявка.</p>
+
+<form method="get" class="filters">
+  <input type="email" name="email" placeholder="example@mail.com" value="{{ email }}">
+  <div></div>
+  <button type="submit">Показать</button>
+</form>
+
+<div class="stack">
+  {% for app in applications %}
+    <article class="card">
+      <div class="card__header">
+        <div>
+          <h3 class="card__title">{{ app.job.title }}</h3>
+          <p class="muted">{{ app.job.employer.name }}</p>
+        </div>
+
+        {% if app.status == "pending" %}
+          <span class="badge badge--warning">{{ app.get_status_display }}</span>
+        {% elif app.status == "interview" %}
+          <span class="badge badge--primary">{{ app.get_status_display }}</span>
+        {% elif app.status == "approved" %}
+          <span class="badge badge--success">{{ app.get_status_display }}</span>
+        {% else %}
+          <span class="badge badge--danger">{{ app.get_status_display }}</span>
+        {% endif %}
+      </div>
+
+      <div class="grid-2" style="grid-template-columns: 1fr 1fr;">
+        <div>
+          <p><strong>ФИО:</strong> {{ app.full_name }}</p>
+          <p><strong>Email:</strong> {{ app.email }}</p>
+        </div>
+        <div>
+          <p><strong>Телефон:</strong> {{ app.phone }}</p>
+          <p><strong>Создано:</strong> {{ app.created_at }}</p>
+        </div>
+      </div>
+
+      <p class="muted" style="margin-bottom:0;">{{ app.cover_letter|truncatechars:220 }}</p>
+    </article>
+  {% empty %}
+    <div class="empty-state">
+      <h3>Заявок пока нет</h3>
+      <p>Попробуй ввести email, на который отправлял заявку.</p>
+    </div>
+  {% endfor %}
+</div>
+{% endblock %}

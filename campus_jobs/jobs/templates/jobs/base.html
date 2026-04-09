@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Campus Jobs{% endblock %}</title>
+  <link rel="stylesheet" href="/static/jobs/styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar__inner">
+      <a class="brand" href="{% url 'job_list' %}">
+      </a>
+
+      <nav class="nav">
+        <a href="{% url 'job_list' %}">Вакансии</a>
+        <a href="{% url 'my_applications' %}">Мои заявки</a>
+        <a href="{% url 'employer_dashboard' %}">Панель работодателя</a>
+        <a href="/admin/">Админка</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="page">
+    <section class="hero">
+      <div class="hero__content">
+        <p class="hero__badge">Работа и стажировки в кампусе</p>
+        <h1>{% block hero_title %}Найдите подходящую вакансию быстрее{% endblock %}</h1>
+        <p class="hero__subtitle">
+          {% block hero_text %}
+          Ассистентские позиции, административные задачи, исследовательские проекты и стажировки —
+          всё в одном месте.
+          {% endblock %}
+        </p>
+      </div>
+
+      {% block hero_extra %}{% endblock %}
+    </section>
+
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>

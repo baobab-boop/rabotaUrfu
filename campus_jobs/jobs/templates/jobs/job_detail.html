@@ -1,0 +1,57 @@
+{% extends "jobs/base.html" %}
+{% block title %}{{ job.title }}{% endblock %}
+{% block hero_title %}{{ job.title }}{% endblock %}
+{% block hero_text %}Проверьте описание, условия и подайте заявку прямо со страницы вакансии.{% endblock %}
+
+{% block content %}
+<div class="grid-2">
+  <section class="stack">
+    <article class="card">
+      <div class="card__header">
+        <div>
+          <h2 class="card__title">{{ job.title }}</h2>
+          <p class="muted">{{ job.employer.name }}</p>
+        </div>
+        <span class="badge badge--primary">{{ job.get_job_type_display }}</span>
+      </div>
+
+      <p>{{ job.description }}</p>
+
+      <div class="card__meta">
+        <span class="badge">{{ job.location }}</span>
+        <span class="badge">Дедлайн: {{ job.deadline }}</span>
+        <span class="badge badge--success">
+          {% if job.salary_min or job.salary_max %}
+            {% if job.salary_min %}{{ job.salary_min }}{% else %}0{% endif %}
+            {% if job.salary_max %}– {{ job.salary_max }}{% endif %}
+          {% else %}
+            зарплата не указана
+          {% endif %}
+        </span>
+      </div>
+
+      <div class="actions">
+        <a class="btn" href="{% url 'apply_to_job' job.pk %}">Подать заявку</a>
+        <a class="btn" style="background: #64748b; box-shadow:none;" href="{% url 'job_list' %}">Назад к списку</a>
+      </div>
+    </article>
+  </section>
+
+  <aside class="stack">
+    <div class="info-box">
+      <h3 style="margin-top:0;">Краткая информация</h3>
+      <div class="info-row"><strong>Работодатель</strong><span>{{ job.employer.name }}</span></div>
+      <div class="info-row"><strong>Email</strong><span>{{ job.employer.contact_email }}</span></div>
+      <div class="info-row"><strong>Локация</strong><span>{{ job.location }}</span></div>
+      <div class="info-row"><strong>Тип</strong><span>{{ job.get_job_type_display }}</span></div>
+    </div>
+
+    <div class="info-box">
+      <h3 style="margin-top:0;">Совет</h3>
+      <p class="muted" style="margin-bottom:0;">
+        В сопроводительном письме лучше сразу указать навыки, доступность по времени и причину, по которой эта позиция тебе подходит.
+      </p>
+    </div>
+  </aside>
+</div>
+{% endblock %}
