@@ -33,7 +33,7 @@ Campus Jobs — это веб-приложение, разработанное �
 ⚙️ Установка и запуск
 1. Клонировать репозиторий
   git clone https://github.com/your-username/campus-jobs.git
-cd campus-jobs
+cd campus_jobs
 2. Создать виртуальное окружение
   python -m venv .venv
 
