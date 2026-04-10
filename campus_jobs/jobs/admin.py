@@ -30,3 +30,7 @@ class ApplicationAdmin(admin.ModelAdmin):
     list_filter = ("status",)
     search_fields = ("full_name", "email", "job__title")
     readonly_fields = ("created_at", "updated_at")
+
+admin.site.site_header = "Campus Jobs Admin"
+admin.site.site_title = "Campus Jobs"
+admin.site.index_title = "Панель управления"
