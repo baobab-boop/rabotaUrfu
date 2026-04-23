@@ -1,11 +1,32 @@
 {% extends "jobs/base.html" %}
 {% block title %}Панель работодателя{% endblock %}
 {% block hero_title %}Панель работодателя{% endblock %}
-{% block hero_text %}Управляйте вакансиями и смотрите количество откликов по каждой позиции.{% endblock %}
+{% block hero_text %}Смотри ключевые показатели по вакансиям, заявкам, резюме и интервью.{% endblock %}
 
 {% block content %}
+<h2 class="section-title">Сводка</h2>
+<p class="section-subtitle">Основные показатели системы.</p>
+
+<div class="cards" style="margin-bottom:20px;">
+  <article class="card">
+    <h3 class="card__title">Вакансии</h3>
+    <p style="font-size:28px; font-weight:800; margin:10px 0 0;">{{ totals.jobs }}</p>
+  </article>
+  <article class="card">
+    <h3 class="card__title">Заявки</h3>
+    <p style="font-size:28px; font-weight:800; margin:10px 0 0;">{{ totals.applications }}</p>
+  </article>
+  <article class="card">
+    <h3 class="card__title">Резюме</h3>
+    <p style="font-size:28px; font-weight:800; margin:10px 0 0;">{{ totals.resumes }}</p>
+  </article>
+  <article class="card">
+    <h3 class="card__title">Интервью</h3>
+    <p style="font-size:28px; font-weight:800; margin:10px 0 0;">{{ totals.interviews }}</p>
+  </article>
+</div>
+
 <h2 class="section-title">Обзор вакансий</h2>
-<p class="section-subtitle">Список всех позиций и количество заявок по каждой из них.</p>
 
 <div class="cards">
   {% for job in jobs %}
@@ -28,6 +49,9 @@
       <div class="card__meta">
         <span class="badge">Заявок: {{ job.app_count }}</span>
         <span class="badge">Дедлайн: {{ job.deadline }}</span>
+        {% if job.category %}
+          <span class="badge badge--primary">{{ job.category.name }}</span>
+        {% endif %}
       </div>
     </article>
   {% empty %}

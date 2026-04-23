@@ -1,7 +1,7 @@
 {% extends "jobs/base.html" %}
 {% block title %}Мои заявки{% endblock %}
 {% block hero_title %}Мои заявки{% endblock %}
-{% block hero_text %}Проверь статус откликов по email и следи за всеми отправленными заявками в одном месте.{% endblock %}
+{% block hero_text %}Проверь статус откликов по email и следи за всеми заявками в одном месте.{% endblock %}
 
 {% block content %}
 <h2 class="section-title">Поиск заявок</h2>
@@ -22,11 +22,13 @@
           <p class="muted">{{ app.job.employer.name }}</p>
         </div>
 
-        {% if app.status == "pending" %}
+        {% if app.status == "new" %}
           <span class="badge badge--warning">{{ app.get_status_display }}</span>
+        {% elif app.status == "review" %}
+          <span class="badge badge--primary">{{ app.get_status_display }}</span>
         {% elif app.status == "interview" %}
           <span class="badge badge--primary">{{ app.get_status_display }}</span>
-        {% elif app.status == "approved" %}
+        {% elif app.status == "offer" %}
           <span class="badge badge--success">{{ app.get_status_display }}</span>
         {% else %}
           <span class="badge badge--danger">{{ app.get_status_display }}</span>
@@ -37,6 +39,9 @@
         <div>
           <p><strong>ФИО:</strong> {{ app.full_name }}</p>
           <p><strong>Email:</strong> {{ app.email }}</p>
+          {% if app.resume %}
+            <p><strong>Резюме:</strong> {{ app.resume.title }}</p>
+          {% endif %}
         </div>
         <div>
           <p><strong>Телефон:</strong> {{ app.phone }}</p>

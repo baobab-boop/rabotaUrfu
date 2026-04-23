@@ -17,11 +17,11 @@
     <form method="post" class="form">
       {% csrf_token %}
 
-      {% if form.non_field_errors %}
-        <div class="notice">
-          {{ form.non_field_errors }}
-        </div>
-      {% endif %}
+      <p>
+        <label for="{{ form.resume.id_for_label }}">Резюме</label>
+        {{ form.resume }}
+        {{ form.resume.errors }}
+      </p>
 
       <p>
         <label for="{{ form.full_name.id_for_label }}">Имя и фамилия</label>

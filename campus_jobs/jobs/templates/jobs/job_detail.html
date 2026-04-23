@@ -1,7 +1,7 @@
 {% extends "jobs/base.html" %}
 {% block title %}{{ job.title }}{% endblock %}
 {% block hero_title %}{{ job.title }}{% endblock %}
-{% block hero_text %}Проверьте описание, условия и подайте заявку прямо со страницы вакансии.{% endblock %}
+{% block hero_text %}Проверь описание, навыки, условия и подай заявку прямо со страницы вакансии.{% endblock %}
 
 {% block content %}
 <div class="grid-2">
@@ -19,6 +19,12 @@
 
       <div class="card__meta">
         <span class="badge">{{ job.location }}</span>
+        {% if job.department %}
+          <span class="badge">Кафедра: {{ job.department.name }}</span>
+        {% endif %}
+        {% if job.category %}
+          <span class="badge badge--primary">{{ job.category.name }}</span>
+        {% endif %}
         <span class="badge">Дедлайн: {{ job.deadline }}</span>
         <span class="badge badge--success">
           {% if job.salary_min or job.salary_max %}
@@ -30,9 +36,20 @@
         </span>
       </div>
 
+      {% if job.job_skills.all %}
+        <div style="margin-top:18px;">
+          <h3 style="margin-bottom:10px;">Требуемые навыки</h3>
+          <div class="card__meta">
+            {% for js in job.job_skills.all %}
+              <span class="badge">{{ js.skill.name }} · {{ js.get_required_level_display }}</span>
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
+
       <div class="actions">
         <a class="btn" href="{% url 'apply_to_job' job.pk %}">Подать заявку</a>
-        <a class="btn" style="background: #64748b; box-shadow:none;" href="{% url 'job_list' %}">Назад к списку</a>
+        <a class="btn" style="background:#64748b; box-shadow:none;" href="{% url 'job_list' %}">Назад к списку</a>
       </div>
     </article>
   </section>

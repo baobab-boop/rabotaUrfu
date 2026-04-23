@@ -1,11 +1,11 @@
 {% extends "jobs/base.html" %}
 {% block title %}Вакансии{% endblock %}
 {% block hero_title %}Вакансии и стажировки{% endblock %}
-{% block hero_text %}Смотрите актуальные предложения, фильтруйте по типу и ищите подходящую роль за пару секунд.{% endblock %}
+{% block hero_text %}Смотрите актуальные предложения, фильтруйте по типу и категории.{% endblock %}
 
 {% block content %}
 <h2 class="section-title">Актуальные предложения</h2>
-<p class="section-subtitle">Поиск по названию, описанию и локации.</p>
+<p class="section-subtitle">Поиск по названию, описанию, локации и категории.</p>
 
 <form method="get" class="filters">
   <input type="text" name="q" placeholder="Поиск по вакансии..." value="{{ q }}">
@@ -15,6 +15,12 @@
     <option value="administrative" {% if job_type == "administrative" %}selected{% endif %}>Административная работа</option>
     <option value="research" {% if job_type == "research" %}selected{% endif %}>Исследовательский проект</option>
     <option value="internship" {% if job_type == "internship" %}selected{% endif %}>Стажировка</option>
+  </select>
+  <select name="category">
+    <option value="">Все категории</option>
+    {% for c in categories %}
+      <option value="{{ c.id }}" {% if category == c.id|stringformat:"s" %}selected{% endif %}>{{ c.name }}</option>
+    {% endfor %}
   </select>
   <button type="submit">Искать</button>
 </form>
@@ -36,6 +42,12 @@
 
       <div class="card__meta">
         <span class="badge">{{ job.location }}</span>
+        {% if job.department %}
+          <span class="badge">Кафедра: {{ job.department.name }}</span>
+        {% endif %}
+        {% if job.category %}
+          <span class="badge badge--primary">{{ job.category.name }}</span>
+        {% endif %}
         <span class="badge">Дедлайн: {{ job.deadline }}</span>
         {% if job.salary_min or job.salary_max %}
           <span class="badge badge--success">
