@@ -3,6 +3,7 @@ from django.db.models import Count, Q
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from rest_framework import permissions, viewsets
+from django.contrib import messages
 
 from .forms import ApplicationForm, ResumeForm
 from .models import (
@@ -124,9 +125,30 @@ def resume_create(request):
 
 @staff_member_required
 def employer_dashboard(request):
+    if request.method == "POST":
+        application_id = request.POST.get("application_id")
+        new_status = request.POST.get("status")
+
+        allowed_statuses = dict(Application.Status.choices)
+
+        if application_id and new_status in allowed_statuses:
+            application = get_object_or_404(Application, pk=application_id)
+            application.status = new_status
+            application.save(update_fields=["status", "updated_at"])
+            messages.success(request, f"Статус заявки '{application.full_name}' обновлён.")
+        else:
+            messages.error(request, "Не удалось обновить статус заявки.")
+
+        return redirect("employer_dashboard")
+
     jobs = (
         Job.objects.select_related("employer", "department", "category")
         .annotate(app_count=Count("applications"))
+        .order_by("-created_at")
+    )
+
+    applications = (
+        Application.objects.select_related("job", "job__employer", "resume")
         .order_by("-created_at")
     )
 
@@ -137,8 +159,16 @@ def employer_dashboard(request):
         "interviews": Interview.objects.count(),
     }
 
-    return render(request, "jobs/dashboard.html", {"jobs": jobs, "totals": totals})
-
+    return render(
+        request,
+        "jobs/dashboard.html",
+        {
+            "jobs": jobs,
+            "applications": applications,
+            "totals": totals,
+            "status_choices": Application.Status.choices,
+        },
+    )
 
 class FacultyViewSet(viewsets.ModelViewSet):
     queryset = Faculty.objects.all().order_by("name")

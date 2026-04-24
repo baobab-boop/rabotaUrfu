@@ -1,0 +1,64 @@
+{% extends "jobs/base.html" %}
+{% block title %}Создать резюме | Campus Jobs{% endblock %}
+{% block hero_title %}Создать резюме{% endblock %}
+{% block hero_text %}Заполни профиль студента, и его можно будет использовать в заявках.{% endblock %}
+
+{% block content %}
+<section class="form-wrap">
+  <article class="panel form-panel">
+    <h2>Новое резюме</h2>
+
+    <form method="post" class="form">
+      {% csrf_token %}
+
+      <div class="field">
+        <label for="{{ form.student_full_name.id_for_label }}">Имя и фамилия</label>
+        {{ form.student_full_name }}
+        {{ form.student_full_name.errors }}
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label for="{{ form.student_email.id_for_label }}">Email</label>
+          {{ form.student_email }}
+          {{ form.student_email.errors }}
+        </div>
+        <div class="field">
+          <label for="{{ form.phone.id_for_label }}">Телефон</label>
+          {{ form.phone }}
+          {{ form.phone.errors }}
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="{{ form.title.id_for_label }}">Название резюме</label>
+        {{ form.title }}
+        {{ form.title.errors }}
+      </div>
+
+      <div class="field">
+        <label for="{{ form.summary.id_for_label }}">Описание</label>
+        {{ form.summary }}
+        {{ form.summary.errors }}
+      </div>
+
+      <div class="field">
+        <label for="{{ form.file_name.id_for_label }}">Имя файла</label>
+        {{ form.file_name }}
+        {{ form.file_name.errors }}
+      </div>
+
+      <div class="field field--checkbox">
+        <label for="{{ form.is_primary.id_for_label }}">Основное резюме</label>
+        {{ form.is_primary }}
+        {{ form.is_primary.errors }}
+      </div>
+
+      <div class="actions">
+        <button class="btn btn--primary" type="submit">Сохранить</button>
+        <a class="btn btn--ghost" href="{% url 'resume_list' %}">Назад</a>
+      </div>
+    </form>
+  </article>
+</section>
+{% endblock %}

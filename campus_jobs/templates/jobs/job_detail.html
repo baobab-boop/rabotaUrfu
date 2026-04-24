@@ -1,0 +1,70 @@
+{% extends "jobs/base.html" %}
+{% block title %}{{ job.title }} | Campus Jobs{% endblock %}
+{% block hero_title %}{{ job.title }}{% endblock %}
+{% block hero_text %}Все детали вакансии: условия, навыки, работодатель и быстрый переход к заявке.{% endblock %}
+
+{% block content %}
+<section class="detail-layout">
+  <div class="detail-main">
+    <article class="panel">
+      <div class="panel__head">
+        <div>
+          <h2>{{ job.title }}</h2>
+          <p>{{ job.employer.name }}</p>
+        </div>
+        <span class="badge badge--blue">{{ job.get_job_type_display }}</span>
+      </div>
+
+      <div class="detail-tags">
+        <span class="badge">{{ job.location }}</span>
+        {% if job.department %}
+          <span class="badge">Кафедра: {{ job.department.name }}</span>
+        {% endif %}
+        {% if job.category %}
+          <span class="badge badge--soft">{{ job.category.name }}</span>
+        {% endif %}
+        <span class="badge">Дедлайн: {{ job.deadline }}</span>
+      </div>
+
+      <div class="detail-text">
+        <h3>Описание</h3>
+        <p>{{ job.description }}</p>
+      </div>
+
+      {% if job.job_skills.all %}
+        <div class="detail-text">
+          <h3>Требуемые навыки</h3>
+          <div class="detail-tags">
+            {% for js in job.job_skills.all %}
+              <span class="badge">{{ js.skill.name }} · {{ js.get_required_level_display }}</span>
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
+
+      <div class="actions">
+        <a class="btn btn--primary" href="{% url 'apply_to_job' job.pk %}">Подать заявку</a>
+        <a class="btn btn--ghost" href="{% url 'job_list' %}">Назад</a>
+      </div>
+    </article>
+  </div>
+
+  <aside class="detail-sidebar">
+    <div class="panel">
+      <h3>Работодатель</h3>
+      <p class="muted">{{ job.employer.description|default:"Описание работодателя не добавлено." }}</p>
+      <div class="info-list">
+        <div><span>Email</span><strong>{{ job.employer.contact_email }}</strong></div>
+        {% if job.employer.website %}
+          <div><span>Сайт</span><strong>{{ job.employer.website }}</strong></div>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="panel panel--accent">
+      <h3>Совет</h3>
+      <p>В сопроводительном письме укажи навыки, доступность по времени и причину, почему тебя интересует эта позиция.</p>
+    </div>
+  </aside>
+</section>
+{% endblock %}

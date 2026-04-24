@@ -105,3 +105,7 @@ class InterviewAdmin(admin.ModelAdmin):
     list_filter = ("status",)
     search_fields = ("application__full_name", "application__job__title", "location")
     autocomplete_fields = ["application"]
+
+admin.site.site_header = "Campus Jobs Администрирование"
+admin.site.site_title = "Campus Jobs"
+admin.site.index_title = "Панель управления"

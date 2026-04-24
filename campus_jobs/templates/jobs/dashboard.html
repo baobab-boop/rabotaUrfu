@@ -1,0 +1,105 @@
+{% extends "jobs/base.html" %}
+{% block title %}Панель работодателя{% endblock %}
+{% block hero_title %}Панель работодателя{% endblock %}
+{% block hero_text %}Здесь можно просматривать заявки студентов и менять их статусы в пару кликов.{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="section__head">
+    <div>
+      <h2>Сводка</h2>
+      <p>Основные показатели системы.</p>
+    </div>
+  </div>
+
+  <div class="stats-grid">
+    <article class="stat-card">
+      <span>Вакансии</span>
+      <strong>{{ totals.jobs }}</strong>
+    </article>
+    <article class="stat-card">
+      <span>Заявки</span>
+      <strong>{{ totals.applications }}</strong>
+    </article>
+    <article class="stat-card">
+      <span>Резюме</span>
+      <strong>{{ totals.resumes }}</strong>
+    </article>
+    <article class="stat-card">
+      <span>Интервью</span>
+      <strong>{{ totals.interviews }}</strong>
+    </article>
+  </div>
+
+  <div class="section__head" style="margin-top: 28px;">
+    <div>
+      <h2>Заявки студентов</h2>
+      <p>Выбери новый статус и сохрани изменения.</p>
+    </div>
+  </div>
+
+  <div class="stack">
+    {% for app in applications %}
+      <article class="panel application-card">
+        <div class="panel__head">
+          <div>
+            <h3>{{ app.full_name }}</h3>
+            <p>{{ app.job.title }} · {{ app.job.employer.name }}</p>
+          </div>
+
+          {% if app.status == "new" %}
+            <span class="badge badge--yellow">{{ app.get_status_display }}</span>
+          {% elif app.status == "review" %}
+            <span class="badge badge--blue">{{ app.get_status_display }}</span>
+          {% elif app.status == "interview" %}
+            <span class="badge badge--blue">{{ app.get_status_display }}</span>
+          {% elif app.status == "offer" %}
+            <span class="badge badge--green">{{ app.get_status_display }}</span>
+          {% else %}
+            <span class="badge badge--red">{{ app.get_status_display }}</span>
+          {% endif %}
+        </div>
+
+        <div class="application-grid">
+          <div>
+            <p><span>Email:</span> <strong>{{ app.email }}</strong></p>
+            <p><span>Телефон:</span> <strong>{{ app.phone }}</strong></p>
+            {% if app.resume %}
+              <p><span>Резюме:</span> <strong>{{ app.resume.title }}</strong></p>
+            {% endif %}
+          </div>
+          <div>
+            <p><span>Создано:</span> <strong>{{ app.created_at }}</strong></p>
+            <p><span>Обновлено:</span> <strong>{{ app.updated_at }}</strong></p>
+          </div>
+        </div>
+
+        <p class="muted">{{ app.cover_letter|truncatechars:220 }}</p>
+
+        <form method="post" class="actions">
+          {% csrf_token %}
+          <input type="hidden" name="application_id" value="{{ app.id }}">
+
+          <div class="field" style="min-width: 260px;">
+            <label for="status-{{ app.id }}">Новый статус</label>
+            <select id="status-{{ app.id }}" name="status">
+              {% for value, label in status_choices %}
+                <option value="{{ value }}" {% if app.status == value %}selected{% endif %}>
+                  {{ label }}
+                </option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <button class="btn btn--primary" type="submit">Сохранить статус</button>
+        </form>
+      </article>
+    {% empty %}
+      <div class="empty-state">
+        <h3>Заявок пока нет</h3>
+        <p>Когда студенты начнут откликаться, они появятся здесь.</p>
+      </div>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}
