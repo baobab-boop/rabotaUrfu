@@ -112,6 +112,12 @@ class ResumeSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Имя студента должно быть не короче 3 символов.")
         return value
 
+    def validate_phone(self, value):
+        allowed = set("0123456789+()- ")
+        if any(ch not in allowed for ch in value):
+            raise serializers.ValidationError("Телефон может содержать только цифры, пробелы, +, -, (, ).")
+        return value
+
     def validate_summary(self, value):
         value = value.strip()
         if len(value) < 20:
@@ -179,12 +185,9 @@ class JobSerializer(serializers.ModelSerializer):
         return value
 
     def validate_skill_ids(self, value):
-        unique_ids = set(value)
-        if len(unique_ids) != len(value):
+        if len(set(value)) != len(value):
             raise serializers.ValidationError("Список навыков содержит дубликаты.")
-
-        existing_count = Skill.objects.filter(id__in=unique_ids).count()
-        if existing_count != len(unique_ids):
+        if Skill.objects.filter(id__in=value).count() != len(set(value)):
             raise serializers.ValidationError("Один или несколько навыков не найдены.")
         return value
 
@@ -208,7 +211,6 @@ class JobSerializer(serializers.ModelSerializer):
     def _apply_skills(self, job, skill_ids):
         if skill_ids is None:
             return
-
         job.job_skills.all().delete()
         for skill in Skill.objects.filter(id__in=skill_ids):
             JobSkill.objects.create(job=job, skill=skill, required_level=JobSkill.RequiredLevel.BASIC)
@@ -295,6 +297,10 @@ class ApplicationSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError({"job": "Срок подачи на эту вакансию уже закончился."})
 
         return attrs
+
+
+class ApplicationStatusSerializer(serializers.Serializer):
+    status = serializers.ChoiceField(choices=Application.Status.choices)
 
 
 class InterviewSerializer(serializers.ModelSerializer):

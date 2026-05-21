@@ -1,0 +1,57 @@
+{% extends "jobs/base.html" %}
+{% block title %}Резюме | Campus Jobs{% endblock %}
+{% block hero_title %}Резюме студентов{% endblock %}
+{% block hero_text %}Создавай резюме и используй их при подаче заявок на вакансии.{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="section__head">
+    <div>
+      <h2>База резюме</h2>
+      <p>Можно отфильтровать по email.</p>
+    </div>
+    <a class="btn btn--primary" href="{% url 'resume_create' %}">Создать резюме</a>
+  </div>
+
+  <form method="get" class="filters">
+    <div class="field field--grow">
+      <label for="email">Email</label>
+      <input id="email" type="email" name="email" placeholder="example@mail.com" value="{{ email }}">
+    </div>
+    <div class="field field--actions">
+      <label class="sr-only">Действие</label>
+      <button class="btn btn--secondary" type="submit">Найти</button>
+    </div>
+  </form>
+
+  <div class="cards-grid">
+    {% for resume in resumes %}
+      <article class="resume-card">
+        <div class="job-card__top">
+          <div>
+            <h3 class="job-card__title">{{ resume.title }}</h3>
+            <p class="job-card__company">{{ resume.student_full_name }}</p>
+          </div>
+          {% if resume.is_primary %}
+            <span class="badge badge--green">Основное</span>
+          {% else %}
+            <span class="badge">Дополнительное</span>
+          {% endif %}
+        </div>
+
+        <div class="resume-info">
+          <p><strong>Email:</strong> {{ resume.student_email }}</p>
+          <p><strong>Телефон:</strong> {{ resume.phone }}</p>
+        </div>
+
+        <p class="muted">{{ resume.summary|truncatechars:180 }}</p>
+      </article>
+    {% empty %}
+      <div class="empty-state">
+        <h3>Резюме пока нет</h3>
+        <p>Создай первое резюме и используй его в заявке.</p>
+      </div>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,83 @@
+{% load static %}
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Campus Jobs{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'jobs/style.css' %}">
+</head>
+<body>
+  <div class="page-shell">
+    <header class="topbar">
+      <div class="topbar__inner">
+        <a class="brand" href="{% url 'job_list' %}">
+          <span class="brand__logo">CJ</span>
+          <span class="brand__text">
+            <strong>Campus Jobs</strong>
+            <small>Вакансии и стажировки</small>
+          </span>
+        </a>
+
+        <nav class="nav">
+          <a href="{% url 'job_list' %}">Вакансии</a>
+          <a href="{% url 'resume_list' %}">Резюме</a>
+          <a href="{% url 'my_applications' %}">Мои заявки</a>
+          <a href="{% url 'employer_dashboard' %}">Панель</a>
+          <a href="/admin/">Админка</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="page">
+      <section class="hero">
+        <div class="hero__content">
+          <div class="hero__badge">Работа в кампусе</div>
+          <h1>{% block hero_title %}Найдите подходящую позицию за несколько минут{% endblock %}</h1>
+          <p>{% block hero_text %}Удобный поиск вакансий, резюме, заявок и статусов в одном месте.{% endblock %}</p>
+
+          <div class="hero__actions">
+            <a class="btn btn--primary" href="{% url 'job_list' %}">Смотреть вакансии</a>
+            <a class="btn btn--secondary" href="{% url 'resume_create' %}">Создать резюме</a>
+          </div>
+        </div>
+
+        <div class="hero__panel">
+          <div class="hero-stat">
+            <span class="hero-stat__value">{{ totals.jobs|default:"—" }}</span>
+            <span class="hero-stat__label">вакансий</span>
+          </div>
+          <div class="hero-stat">
+            <span class="hero-stat__value">{{ totals.applications|default:"—" }}</span>
+            <span class="hero-stat__label">заявок</span>
+          </div>
+          <div class="hero-stat">
+            <span class="hero-stat__value">{{ totals.resumes|default:"—" }}</span>
+            <span class="hero-stat__label">резюме</span>
+          </div>
+        </div>
+      </section>
+
+      {% if messages %}
+        <div class="messages">
+          {% for message in messages %}
+            <div class="message message--{{ message.tags }}">{{ message }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      {% block content %}{% endblock %}
+    </main>
+
+    <footer class="footer">
+      <div class="footer__inner">
+        <p>Campus Jobs · Платформа вакансий и стажировок для студентов</p>
+        <p>Сервис для поиска работы в кампусе</p>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>

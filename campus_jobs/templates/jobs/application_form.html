@@ -1,0 +1,58 @@
+{% extends "jobs/base.html" %}
+{% block title %}Заявка | Campus Jobs{% endblock %}
+{% block hero_title %}Подать заявку{% endblock %}
+{% block hero_text %}Заполни форму внимательно. После отправки заявка появится в разделе «Мои заявки».{% endblock %}
+
+{% block content %}
+<section class="form-wrap">
+  <article class="panel form-panel">
+    <div class="panel__head">
+      <div>
+        <h2>{{ job.title }}</h2>
+        <p>{{ job.employer.name }} · {{ job.get_job_type_display }}</p>
+      </div>
+      <span class="badge badge--blue">Форма заявки</span>
+    </div>
+
+    <form method="post" class="form">
+      {% csrf_token %}
+
+      <div class="field">
+        <label for="{{ form.resume.id_for_label }}">Резюме</label>
+        {{ form.resume }}
+        {{ form.resume.errors }}
+      </div>
+
+      <div class="field">
+        <label for="{{ form.full_name.id_for_label }}">Имя и фамилия</label>
+        {{ form.full_name }}
+        {{ form.full_name.errors }}
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label for="{{ form.email.id_for_label }}">Email</label>
+          {{ form.email }}
+          {{ form.email.errors }}
+        </div>
+        <div class="field">
+          <label for="{{ form.phone.id_for_label }}">Телефон</label>
+          {{ form.phone }}
+          {{ form.phone.errors }}
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="{{ form.cover_letter.id_for_label }}">Сопроводительное письмо</label>
+        {{ form.cover_letter }}
+        {{ form.cover_letter.errors }}
+      </div>
+
+      <div class="actions">
+        <button class="btn btn--primary" type="submit">Отправить заявку</button>
+        <a class="btn btn--ghost" href="{% url 'job_detail' job.pk %}">Отмена</a>
+      </div>
+    </form>
+  </article>
+</section>
+{% endblock %}

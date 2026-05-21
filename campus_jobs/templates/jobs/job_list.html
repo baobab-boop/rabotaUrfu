@@ -1,7 +1,7 @@
 {% extends "jobs/base.html" %}
 {% block title %}Вакансии{% endblock %}
 {% block hero_title %}Вакансии и стажировки{% endblock %}
-{% block hero_text %}Смотрите актуальные предложения, фильтруйте по типу и категории.{% endblock %}
+{% block hero_text %}Смотрите актуальные предложения, фильтруйте по типу, категории и ищите подходящую роль за пару секунд.{% endblock %}
 
 {% block content %}
 <h2 class="section-title">Актуальные предложения</h2>
@@ -25,42 +25,53 @@
   <button type="submit">Искать</button>
 </form>
 
-<div class="cards">
+<div class="cards-grid">
   {% for job in jobs %}
-    <article class="card">
-      <div class="card__header">
+    <article class="job-card">
+      <div class="job-card__top">
         <div>
-          <h3 class="card__title">
-            <a class="link" href="{% url 'job_detail' job.pk %}">{{ job.title }}</a>
+          <h3 class="job-card__title">
+            <a href="{% url 'job_detail' job.pk %}">{{ job.title }}</a>
           </h3>
-          <p class="muted">{{ job.employer.name }}</p>
+          <p class="job-card__company">{{ job.employer.name }}</p>
         </div>
-        <span class="badge badge--primary">{{ job.get_job_type_display }}</span>
+        <span class="badge badge--blue">{{ job.get_job_type_display }}</span>
       </div>
 
-      <p class="muted">{{ job.description|truncatechars:165 }}</p>
+      <p class="job-card__text">{{ job.description|truncatechars:170 }}</p>
 
-      <div class="card__meta">
+      <div class="job-card__meta">
         <span class="badge">{{ job.location }}</span>
         {% if job.department %}
           <span class="badge">Кафедра: {{ job.department.name }}</span>
         {% endif %}
         {% if job.category %}
-          <span class="badge badge--primary">{{ job.category.name }}</span>
+          <span class="badge badge--soft">{{ job.category.name }}</span>
         {% endif %}
         <span class="badge">Дедлайн: {{ job.deadline }}</span>
-        {% if job.salary_min or job.salary_max %}
-          <span class="badge badge--success">
-            {% if job.salary_min %}{{ job.salary_min }}{% else %}0{% endif %}
-            {% if job.salary_max %}– {{ job.salary_max }}{% endif %}
-          </span>
-        {% endif %}
+      </div>
+
+      <div class="job-card__bottom">
+        <div class="salary">
+          {% if job.salary_min or job.salary_max %}
+            <strong>
+              {% if job.salary_min %}{{ job.salary_min }}{% else %}0{% endif %}
+              {% if job.salary_max %}– {{ job.salary_max }}{% endif %}
+            </strong>
+            <span>зарплата</span>
+          {% else %}
+            <strong>Не указана</strong>
+            <span>зарплата</span>
+          {% endif %}
+        </div>
+
+        <a class="btn btn--secondary" href="{% url 'job_detail' job.pk %}">Подробнее</a>
       </div>
     </article>
   {% empty %}
     <div class="empty-state">
       <h3>Ничего не найдено</h3>
-      <p>Попробуй изменить запрос или сбросить фильтр.</p>
+      <p>Попробуй изменить фильтры или поиск.</p>
     </div>
   {% endfor %}
 </div>

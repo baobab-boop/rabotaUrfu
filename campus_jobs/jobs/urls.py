@@ -8,8 +8,7 @@ urlpatterns = [
     path("jobs/<int:pk>/", views.job_detail, name="job_detail"),
     path("jobs/<int:pk>/apply/", views.apply_to_job, name="apply_to_job"),
     path("applications/", views.my_applications, name="my_applications"),
+    path("resumes/", views.resume_list, name="resume_list"),
+    path("resumes/new/", views.resume_create, name="resume_create"),
     path("dashboard/", views.employer_dashboard, name="employer_dashboard"),
-    path("api/jobs/", views.JobListAPIView.as_view(), name="api_jobs"),
-    path("api/jobs/<int:pk>/", views.JobDetailAPIView.as_view(), name="api_job_detail"),
-    path("api/applications/", views.ApplicationListCreateAPIView.as_view(), name="api_applications"),
 ]

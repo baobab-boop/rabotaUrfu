@@ -1,0 +1,73 @@
+{% extends "jobs/base.html" %}
+{% block title %}Мои заявки | Campus Jobs{% endblock %}
+{% block hero_title %}Мои заявки{% endblock %}
+{% block hero_text %}Проверь статус откликов по email и отслеживай все заявки в одном месте.{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="section__head">
+    <div>
+      <h2>Поиск заявок</h2>
+      <p>Укажи email, на который отправлял заявку.</p>
+    </div>
+  </div>
+
+  <form method="get" class="filters">
+    <div class="field field--grow">
+      <label for="email">Email</label>
+      <input id="email" type="email" name="email" placeholder="example@mail.com" value="{{ email }}">
+    </div>
+    <div class="field field--actions">
+      <label class="sr-only">Действие</label>
+      <button class="btn btn--primary" type="submit">Показать</button>
+    </div>
+  </form>
+
+  <div class="stack">
+    {% for app in applications %}
+      <article class="panel application-card">
+        <div class="panel__head">
+          <div>
+            <h3>{{ app.job.title }}</h3>
+            <p>{{ app.job.employer.name }}</p>
+          </div>
+
+          {% if app.status == "new" %}
+            <span class="badge badge--yellow">{{ app.get_status_display }}</span>
+          {% elif app.status == "review" %}
+            <span class="badge badge--blue">{{ app.get_status_display }}</span>
+          {% elif app.status == "interview" %}
+            <span class="badge badge--blue">{{ app.get_status_display }}</span>
+          {% elif app.status == "offer" %}
+            <span class="badge badge--green">{{ app.get_status_display }}</span>
+          {% else %}
+            <span class="badge badge--red">{{ app.get_status_display }}</span>
+          {% endif %}
+        </div>
+
+        <div class="application-grid">
+          <div>
+            <p><span>ФИО:</span> <strong>{{ app.full_name }}</strong></p>
+            <p><span>Email:</span> <strong>{{ app.email }}</strong></p>
+          </div>
+          <div>
+            <p><span>Телефон:</span> <strong>{{ app.phone }}</strong></p>
+            <p><span>Создано:</span> <strong>{{ app.created_at }}</strong></p>
+          </div>
+        </div>
+
+        {% if app.resume %}
+          <p class="muted">Резюме: {{ app.resume.title }}</p>
+        {% endif %}
+
+        <p class="muted">{{ app.cover_letter|truncatechars:220 }}</p>
+      </article>
+    {% empty %}
+      <div class="empty-state">
+        <h3>Заявок пока нет</h3>
+        <p>Попробуй поискать по email или подать первую заявку.</p>
+      </div>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}
